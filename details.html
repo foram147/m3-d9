@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
+      crossorigin="anonymous"
+    />
+
+    <title>Product Details</title>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Product Info</a>
+
+      <div class="container">
+        <ul id="productInfo" class="list-group list-group-flush">
+          <li>
+            <div class="spinner-border text-info" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <script>
+      let apiKey =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDgxN2M1ZWU3ODE4NzAwMTVjMjY3YTgiLCJpYXQiOjE2MzIzODYzODksImV4cCI6MTYzMzU5NTk4OX0.zg0mCpdeIElzkSWNG7Ne2F3zYVNhMS3ivLyNOHVVAc0";
+
+      let productID = new URLSearchParams(location.search).get("id");
+      const url =
+        "https://striveschool-api.herokuapp.com/api/product/" + productID;
+      window.onload = () => {
+        getProducts();
+      };
+
+      const getProducts = () => {
+        fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => makeProductCard(data))
+          .catch((error) => console.error(error));
+      };
+      let productContainer = document.getElementById("productInfo");
+      const makeProductCard = (productData) => {
+        productContainer.innerHTML = `
+        <li class="list-group-item"><h5>${productData.name}</h5></li> 
+        <li class="list-group-item"><p>${productData.description}</p></li> 
+        <li class="list-group-item"><p>${
+          productData.brand
+        }</p></li>                              
+        <li class="list-group-item"><img src="${
+          productData.imageUrl
+        }" width="64px" heigth="64px" alt="..."></li>
+        <li class="list-group-item"><p>${productData.price}</p></li>
+        <li class="list-group-item"><p>${new Date(
+          productData.createdAt
+        ).toLocaleString()}</p></li>
+                                        <li class="list-group-item"><p>${new Date(
+                                          productData.updatedAt
+                                        ).toLocaleString()}</p></li>
+                                        <li class="list-group-item"><a href="backoffice.html?id=${
+                                          productData._id
+                                        }">Edit</a></li>`;
+      };
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

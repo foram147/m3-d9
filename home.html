@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
+      crossorigin="anonymous"
+    />
+    <style>
+      .img-fluid {
+        height: 200px !important;
+        padding: 0%;
+      }
+    </style>
+    <title>Strivezone</title>
+  </head>
+  <body>
+    <h1>Amazon</h1>
+    <ul class="nav">
+      <li class="nav-item">
+        <a class="nav-link" href="#">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="backoffice.html">Add New items</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"
+          >Disabled</a
+        >
+      </li>
+    </ul>
+    <div class="container">
+      <div id="displayitems" class="row"></div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
+      integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"
+      integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      let itemData = [];
+      const getItems = async () => {
+        let response = await fetch(
+          " https://striveschool-api.herokuapp.com/api/product/",
+          {
+            headers: {
+              Authorization:
+                "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDgxN2M1ZWU3ODE4NzAwMTVjMjY3YTgiLCJpYXQiOjE2MzIzMTQ1OTYsImV4cCI6MTYzMzUyNDE5Nn0.ezfB5TOOmOEQll_AUmYtoISBHkcZ9erdFndFOSmE-vg",
+            },
+          }
+        );
+        let data = await response.json();
+        itemData = data;
+        displayItems(data);
+      };
+      window.onload = () => {
+        getItems();
+      };
+
+      const rows = document.getElementById("displayitems");
+      function displayItems(data) {
+        itemData.forEach((data) => {
+          console.log(data);
+          rows.innerHTML += `
+               
+                <div class="card mx-3 my-3" style="max-width: 840px;">
+                  <div class="row ">
+                      <div class="col-md-4">
+                        <img src="${data.imageUrl}" class="img-fluid rounded-start" alt="...">
+                      </div>
+                    <div class="col-md-8">
+                      <div class="card-body">
+                        <h5 class="card-title">${data.name}</h5>
+                        <p class="card-text">${data.brand}</p>
+                        <p class="card-text">${data.price}</p>
+                        <a class="btn btn-primary" href="details.html?id=${data._id}">Details</a>
+                     
+                      </div>
+                    </div>
+                  </div>
+                </div>`;
+        });
+      }
+    </script>
+  </body>
+</html>
