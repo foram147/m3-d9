@@ -117,9 +117,9 @@
   <script>
     let key =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDgxN2M1ZWU3ODE4NzAwMTVjMjY3YTgiLCJpYXQiOjE2MzIzODYzODksImV4cCI6MTYzMzU5NTk4OX0.zg0mCpdeIElzkSWNG7Ne2F3zYVNhMS3ivLyNOHVVAc0";
-    let productId = new URLSearchParams(Location.searc).get("id");
+    let productId = new URLSearchParams(location.search).get("id");
     let method = productId ? "PUT" : "POST";
-    const url = productId
+    let url = productId
       ? "https://striveschool-api.herokuapp.com/api/product/" + productId
       : "https://striveschool-api.herokuapp.com/api/product/";
     window.onload = () => {
@@ -139,7 +139,8 @@
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer ${key}",
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDgxN2M1ZWU3ODE4NzAwMTVjMjY3YTgiLCJpYXQiOjE2MzIzODYzODksImV4cCI6MTYzMzU5NTk4OX0.zg0mCpdeIElzkSWNG7Ne2F3zYVNhMS3ivLyNOHVVAc0",
         },
       })
         .then((response) => response.json())
@@ -159,18 +160,21 @@
     };
 
     deleteProduct = () => {
-      fetch(url, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer ${key}",
-        },
-      })
-        .then((response) => response.json())
-        .then((data) =>
-          showAlert("success", "The product ${product_id} deleted")
-        )
-        .catch((err) => alert(err.message));
+      console.log(url);
+      try {
+        fetch(url, {
+          method: "DELETE",
+          headers: new Headers({
+            "Content-Type": "application/json",
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDgxN2M1ZWU3ODE4NzAwMTVjMjY3YTgiLCJpYXQiOjE2MzIzODYzODksImV4cCI6MTYzMzU5NTk4OX0.zg0mCpdeIElzkSWNG7Ne2F3zYVNhMS3ivLyNOHVVAc0",
+          }),
+        });
+        if (!response.ok) throw new Error("failed to delete");
+        alert("product deleted successfully");
+      } catch (error) {
+        alert(error.message);
+      }
     };
     const showAlert = (type, alertText) => {
       const alertContainer = document.getElementById("alert");
@@ -186,7 +190,6 @@
       }, 4000);
     };
     const response = async (event) => {
-      event.preventDefault();
       const productDetails = {
         name: document.getElementById("itemname").value,
         description: document.getElementById("description").value,
@@ -194,21 +197,24 @@
         imageUrl: document.getElementById("imgUrl").value,
         price: document.getElementById("price").value,
       };
+      event.preventDefault();
       console.log(productDetails);
-      const url = "https://striveschool-api.herokuapp.com/api/product/";
+      //const url = "https://striveschool-api.herokuapp.com/api/product/";
       try {
         fetch(url, {
-          method: "POST",
-          headers: {
+          method,
+
+          headers: new Headers({
             "Content-Type": "application/json",
             Authorization:
               "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDgxN2M1ZWU3ODE4NzAwMTVjMjY3YTgiLCJpYXQiOjE2MzIzODYzODksImV4cCI6MTYzMzU5NTk4OX0.zg0mCpdeIElzkSWNG7Ne2F3zYVNhMS3ivLyNOHVVAc0",
-          },
+          }),
           body: JSON.stringify(productDetails),
         });
         if (response.ok) {
           const resp = await response.json();
-          alert("product added successfully with id" + resp_id);
+          console.log("product added successfully with id" + resp_id);
+          location.assign("index.html");
         }
       } catch (err) {
         alert(err.message);

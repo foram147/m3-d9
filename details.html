@@ -46,29 +46,32 @@
           },
         })
           .then((response) => response.json())
-          .then((data) => makeProductCard(data))
+          .then((data) => {
+            console.log(data);
+            makeProductCard(data);
+          })
           .catch((error) => console.error(error));
       };
       let productContainer = document.getElementById("productInfo");
-      const makeProductCard = (productData) => {
+      const makeProductCard = (data) => {
         productContainer.innerHTML = `
-        <li class="list-group-item"><h5>${productData.name}</h5></li> 
-        <li class="list-group-item"><p>${productData.description}</p></li> 
+        <li class="list-group-item"><h5>${data.name}</h5></li> 
+        <li class="list-group-item"><p>${data.description}</p></li> 
         <li class="list-group-item"><p>${
-          productData.brand
+          data.brand
         }</p></li>                              
         <li class="list-group-item"><img src="${
-          productData.imageUrl
+          data.imageUrl
         }" width="64px" heigth="64px" alt="..."></li>
-        <li class="list-group-item"><p>${productData.price}</p></li>
+        <li class="list-group-item"><p>${data.price}</p></li>
         <li class="list-group-item"><p>${new Date(
-          productData.createdAt
+          data.createdAt
         ).toLocaleString()}</p></li>
                                         <li class="list-group-item"><p>${new Date(
-                                          productData.updatedAt
+                                          data.updatedAt
                                         ).toLocaleString()}</p></li>
                                         <li class="list-group-item"><a href="backoffice.html?id=${
-                                          productData._id
+                                          data._id
                                         }">Edit</a></li>`;
       };
     </script>
